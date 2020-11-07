@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using ModernArchitectureShop.StoreApi.Infrastructure.Persistence;
+using ModernArchitectureShop.Store.Application.Persistence;
+using ModernArchitectureShop.Store.Infrastructure.Persistence;
 
 namespace ModernArchitectureShop.StoreApi
 {
@@ -10,7 +11,7 @@ namespace ModernArchitectureShop.StoreApi
         public static void Main(string[] args)
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-            CreateHostBuilder(args).Build().CreateDatabase<StoreDbContext>().Run();
+            CreateHostBuilder(args).Build().CreateDatabase<IStoreRepository>().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

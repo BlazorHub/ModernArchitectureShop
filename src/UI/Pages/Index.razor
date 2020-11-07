@@ -1,7 +1,43 @@
-﻿@page "/"
+@page "/"
+@using Microsoft.Extensions.Configuration
+@inject AuthenticationStateProvider AuthState
+@inject IConfiguration Configuration
 
-<h1>Hello, world!</h1>
+<p>Welcome in Modern Architecture Shop.</p>
 
-Welcome to your new app.
+<AuthorizeView>
+  <Authorized>
+    <h1>Hello, @_username</h1>
+  </Authorized>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+  <NotAuthorized>
+    <div>
+      <a href=@GetRegisterUrl() target="_parent">Register</a>
+    </div>
+  </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    private string _username = "Anonymous User";
+
+    protected override async Task OnInitializedAsync()
+    {
+      var state = await AuthState.GetAuthenticationStateAsync();
+
+      _username =
+        state.User.Claims
+          .Where(c => c.Type.Equals("name"))
+          .Select(c => c.Value)
+          .FirstOrDefault() ?? string.Empty;
+
+      await base.OnInitializedAsync();
+    }
+
+    private string GetRegisterUrl()
+    {
+      var identityUrl = Configuration.GetValue<string>("IDENTITY_AUTHORITY");
+       const string  registerRoute = "/identity/account/register";
+      return identityUrl + registerRoute;
+    }
+}

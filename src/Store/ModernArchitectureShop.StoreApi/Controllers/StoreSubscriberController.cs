@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ModernArchitectureShop.StoreApi.Application.UseCases.CreateProduct;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.CreateProduct;
 
 namespace ModernArchitectureShop.StoreApi.Controllers
 {

@@ -4,8 +4,8 @@ using Dapr;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ModernArchitectureShop.StoreApi.Application.UseCases.CreateProduct;
-using ModernArchitectureShop.StoreApi.Application.UseCases.DeleteProduct;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.CreateProduct;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.DeleteProduct;
 
 namespace ModernArchitectureShop.StoreApi.Controllers
 {
@@ -33,7 +33,7 @@ namespace ModernArchitectureShop.StoreApi.Controllers
         [Topic("ProductDeleted", "ProductDeleted")]
         [HttpPost("ProductDeleted")]
         public async Task SubcribeProductDeleted(
-                     DeleteProductCommand command,
+                     DeleteProduct command,
                      [FromServices] IMediator mediator,
                      CancellationToken cancellationToken)
         {

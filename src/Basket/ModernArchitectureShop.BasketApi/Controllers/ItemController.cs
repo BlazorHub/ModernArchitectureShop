@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ModernArchitectureShop.BasketApi.Application.UseCases.AddItem;
-using ModernArchitectureShop.BasketApi.Application.UseCases.DeleteItem;
+using ModernArchitectureShop.Basket.Infrastructure.UseCases.AddItem;
+using ModernArchitectureShop.Basket.Infrastructure.UseCases.DeleteItem;
 
 namespace ModernArchitectureShop.BasketApi.Controllers
 {

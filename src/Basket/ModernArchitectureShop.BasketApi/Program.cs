@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using ModernArchitectureShop.BasketApi.Infrastructure.Persistence;
+using ModernArchitectureShop.Basket.Application.Persistence;
+using ModernArchitectureShop.Basket.Infrastructure.ServiceCollection;
 
 namespace ModernArchitectureShop.BasketApi
 {
@@ -10,7 +11,7 @@ namespace ModernArchitectureShop.BasketApi
         public static void Main(string[] args)
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-            CreateHostBuilder(args).Build().CreateDatabase<BasketDbContext>().Run();
+            CreateHostBuilder(args).Build().CreateDatabase<IItemRepository>().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

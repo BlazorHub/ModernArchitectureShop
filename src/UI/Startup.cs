@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,9 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.IdentityModel.Logging;
+using ModernArchitectureShop.BlazorUI.DaprClients;
 using ModernArchitectureShop.BlazorUI.Services;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace ModernArchitectureShop.BlazorUI
 {
@@ -21,12 +24,15 @@ namespace ModernArchitectureShop.BlazorUI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             var storeApiURL = Configuration.GetValue<string>("STORE_URL");
@@ -50,48 +56,60 @@ namespace ModernArchitectureShop.BlazorUI
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
 
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
             services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme,
-                options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+
+                })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
                 {
                     options.Authority = Configuration.GetValue<string>("IDENTITY_AUTHORITY");
-                    options.RequireHttpsMetadata = false;
                     options.ClientId = "BlazorUI";
                     options.ClientSecret = "secret";
-                    options.UsePkce = true;
+                    options.RequireHttpsMetadata = false;
+
                     options.ResponseType = "code";
-                    options.SaveTokens = true;
+
                     options.Scope.Add("openid");
                     options.Scope.Add("profile");
                     options.Scope.Add("email");
                     options.Scope.Add("offline_access");
 
+                    options.UseTokenLifetime = true;
+
                     //Scope for accessing API
                     options.Scope.Add(storeApiName); //invalid scope for client
                     options.Scope.Add(basketApiName); //invalid scope for client
+                    options.UsePkce = true;
+                    options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
                 });
 
-            services.AddAuthorization();
-
-            services.AddHttpClient<ProductService, ProductService>(client =>
+            services.AddHttpClient<ProductsService>(client =>
             {
                 client.BaseAddress = new Uri(storeApiURL);
             });
 
-            services.AddHttpClient<BasketProductService, BasketProductService>(client =>
+            services.AddHttpClient<BasketsService>(client =>
             {
                 client.BaseAddress = new Uri(basketApiURL);
             });
 
-            services.AddHttpClient<IdentityService, IdentityService>(client =>
-            {
-                client.BaseAddress = new Uri(Configuration.GetValue<string>("IDENTITY_AUTHORITY"));
-            });
+            services.AddScoped<IdentityService, IdentityService>();
+            services.AddScoped<ProductsDaprClient>();
+
+            services.AddCustomDapr();
+
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+
+            // Todo only for test
+            IdentityModelEventSource.ShowPII = true;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,16 +122,26 @@ namespace ModernArchitectureShop.BlazorUI
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseStaticFiles();
 
+            app.UseCookiePolicy();
+
             //app.UseHttpsRedirection();
             app.UseRouting();
+            
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                // workaround IdentityServer4
+                MinimumSameSitePolicy = SameSiteMode.Lax,
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
             {
@@ -121,5 +149,7 @@ namespace ModernArchitectureShop.BlazorUI
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
+
+
     }
 }

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ModernArchitectureShop.StoreApi.Application.UseCases.AddOrUpdateProductStore;
-using ModernArchitectureShop.StoreApi.Application.UseCases.CreateStore;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.AddOrUpdateProductStore;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.CreateStore;
 
 namespace ModernArchitectureShop.StoreApi.Controllers
 {

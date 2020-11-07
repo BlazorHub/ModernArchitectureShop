@@ -2,8 +2,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ModernArchitectureShop.StoreApi.Application.UseCases.GetProducts;
-using ModernArchitectureShop.StoreApi.Application.UseCases.GetProductsByIds;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.GetProducts;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.GetProductsByIds;
+using ModernArchitectureShop.Store.Infrastructure.UseCases.SearchProducts;
 
 namespace ModernArchitectureShop.StoreApi.Controllers
 {
@@ -18,6 +19,13 @@ namespace ModernArchitectureShop.StoreApi.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] GetProductsCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpGet("search-products")]
+        public async Task<IActionResult> SearchProducts([FromQuery] SearchProductsCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);
