@@ -1,0 +1,45 @@
+@page "/orderhistory"
+
+<div class="container">
+    <h3 class="p-3 text-center">Order History</h3>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>OrderId</th>
+                <th>Date</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orderModel in OrdersModel.Orders)
+            {
+                <tr style="background-color: pink">
+                    <td>
+                        @orderModel.OrderId
+                    </td>
+                    <td>@orderModel.CreationDate</td>
+                    <td>Total Price: @orderModel.Items.Sum(x=>x.Price).ToString("0.##")</td>
+                </tr>
+                <table>
+                    <tbody>
+                        @foreach (var itemModel in orderModel.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="/images/ProductImagesSmall/@itemModel.ImageUrl">
+                                </td>
+                                <td>
+                                    @itemModel.Name
+                                </td>
+                                <td>
+                                    @itemModel.Price.ToString("0.##")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </tbody>
+    </table>
+</div>

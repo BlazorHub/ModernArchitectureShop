@@ -1,0 +1,88 @@
+@page "/items"
+@page "/items/{Page:int}"
+@inject NavigationManager NavigationManager
+
+<h6 class="validation-message">@_errorMessage</h6>
+
+@if (_itemsModel.TotalOfItems <= 0)
+{
+    <div class="text-center">
+        <h6 style="color: blue">"Basket is empty! Please add some Products to buy.</h6>
+    </div>
+}
+else
+{
+    <div class="row mt-4">
+        @foreach (var item in _itemsModel.Items)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="media-body">
+                                <div>
+                                    <img src="/images/ProductImagesOriginal/@item.ImageUrl" alt="..." width="120" height="60" style="float:right">
+                                </div>
+                                <h5 class="mt-0">@item.Name</h5>
+                                <div>Category: @item.Code</div>
+                                <div>Location: Todo</div>
+                                <div>Price: <span class="font-weight-bold" style="color: brown;">$@item.Price.ToString("0.##")</span></div>
+                                <div class="d-flex justify-content-between align-items-center" style="margin: 15px 0 0;">
+                                    <div>Available: <span class="font-weight-bold" style="color: green;">Todo</span></div>
+                                </div>
+                                <div>
+                                    <button class="addbutton" @onclick="@(async () => {
+                                                                                          if (item != null)
+                                                                                          {
+                                                                                              await RemoveProductFromBasketAsync(item);
+                                                                                          }
+                                                                                      })">
+                                        ❌
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center" style="margin: 15px 0 0;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="/items/1" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @for (var i = 1; i <= Math.Ceiling((double)_itemsModel!.TotalOfItems / PageSize); i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/items/@i">@i</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link" href="/items/@Math.Ceiling((double) _itemsModel.TotalOfItems / PageSize)" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div style="align-content: center; margin: 15px;">
+        <label style="font-size : 20px;">
+            Total Price:
+            <span class="font-weight-bold" style="color: green;">
+                @(_totalPrice.ToString("0.##"))
+            </span>
+        </label>
+        <br />
+        <button class="button"
+                style="color:white ; background-color: lightseagreen; font-weight: bold; font-size : 20px;width: 100%;height: 70px;"
+                @onclick="@( () => { NavigationManager.NavigateTo("orders");})">
+            Buy
+        </button>
+    </div>
+}

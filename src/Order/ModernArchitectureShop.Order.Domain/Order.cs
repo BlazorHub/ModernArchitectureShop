@@ -7,9 +7,9 @@ namespace ModernArchitectureShop.Order.Domain
     {
         public Guid OrderId { get; set; }
         public Guid StoreId { get; set; }
-        public ICollection<Item>? Items { get; set; }
         public string Username { get; set; } = string.Empty;
-        public Status Status { get; set; }
-        public DateTimeOffset CreationDate { get; set; } = DateTimeOffset.Now;
+        public State State { get; set; }
+        public DateTimeOffset CreationDate { get; set; } = new DateTimeOffset();
+        public ICollection<Item>? Items { get; set; }
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.IdentityModel.Logging;
 using ModernArchitectureShop.ShopUI.DaprClients;
@@ -32,7 +31,7 @@ namespace ModernArchitectureShop.ShopUI
                        .AllowAnyHeader();
             }));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
 
             var storeApiURL = Configuration.GetValue<string>("STORE_URL");
             var storeApiName = Configuration.GetValue<string>("STORE_NAME");
@@ -51,6 +50,16 @@ namespace ModernArchitectureShop.ShopUI
             services.AddHttpClient(basketApiName, client =>
             {
                 client.BaseAddress = new Uri(basketApiURL);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            });
+
+            var orderApiURL = Configuration.GetValue<string>("ORDER_URL");
+            var orderApiName = Configuration.GetValue<string>("ORDER_NAME");
+
+            services.AddHttpClient(orderApiName, client =>
+            {
+                client.BaseAddress = new Uri(orderApiURL);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
@@ -81,22 +90,29 @@ namespace ModernArchitectureShop.ShopUI
                     options.UseTokenLifetime = true;
 
                     //Scope for accessing API
-                    options.Scope.Add(storeApiName); //invalid scope for client
-                    options.Scope.Add(basketApiName); //invalid scope for client
+                    options.Scope.Add(storeApiName);
+                    options.Scope.Add(basketApiName);
+                    options.Scope.Add(orderApiName);
                     options.UsePkce = true;
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
                 });
+            
+            // todo user the interface IHttpClientService
+            services.AddHttpClient<ProductHttpClientService, ProductHttpClientService>(client =>
+             {
+                 client.BaseAddress = new Uri(storeApiURL);
+             });
 
-            services.AddHttpClient<ProductsService>(client =>
-            {
-                client.BaseAddress = new Uri(storeApiURL);
-            });
-
-            services.AddHttpClient<BasketsService>(client =>
+            services.AddHttpClient<BasketHttpClientService, BasketHttpClientService>(client =>
             {
                 client.BaseAddress = new Uri(basketApiURL);
             });
+
+            services.AddHttpClient<OrderHttpClientService, OrderHttpClientService>(client =>
+             {
+                 client.BaseAddress = new Uri(orderApiURL);
+             });
 
             services.AddScoped<IdentityService, IdentityService>();
             services.AddScoped<ProductsDaprClient>();
@@ -125,12 +141,11 @@ namespace ModernArchitectureShop.ShopUI
             }
 
             app.UseStaticFiles();
-
             app.UseCookiePolicy();
 
             //app.UseHttpsRedirection();
             app.UseRouting();
-            
+
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 // workaround IdentityServer4
@@ -148,7 +163,5 @@ namespace ModernArchitectureShop.ShopUI
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
-
-
     }
 }

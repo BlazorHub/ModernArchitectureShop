@@ -2,17 +2,12 @@
 
 html, body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: #1e88e5;
+  background-color: lightsalmon;
+  color: brown;
 }
 
-a, .btn-link {
-  color: #ffffff;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+h1 {
+  color: brown;
 }
 
 app {
@@ -32,9 +27,9 @@ app {
 }
 
   .main .top-row {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-    border-bottom: 1px solid #1861ac;
+    border-bottom: 1px solid maroon;
     justify-content: flex-end;
+    font-weight: bold;
   }
 
     .main .top-row > a, .main .top-row .btn-link {
@@ -47,67 +42,64 @@ app {
       text-overflow: ellipsis;
     }
 
-.sidebar {
-  background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+.sidebar .top-row {
+  background-color: maroon;
 }
 
-  .sidebar .top-row {
-    background-color: #1e88e5;
+.sidebar .navbar-brand {
+  font-size: 1.1rem;
+}
+
+.sidebar .oi {
+  width: 2rem;
+  font-size: 1.1rem;
+  vertical-align: text-top;
+  top: -2px;
+}
+
+.sidebar .nav-item {
+  font-size: 0.9rem;
+  padding-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+  .sidebar .nav-item:first-of-type {
+    padding-top: 1rem;
   }
 
-  .sidebar .navbar-brand {
-    font-size: 1.1rem;
+  .sidebar .nav-item:last-of-type {
+    padding-bottom: 1rem;
   }
 
-  .sidebar .oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
+  .sidebar .nav-item a {
+    color: maroon;
+    border-radius: 4px;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    line-height: 3rem;
   }
 
-  .sidebar .nav-item {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
-  }
-
-    .sidebar .nav-item:first-of-type {
-      padding-top: 1rem;
+    .sidebar .nav-item a.active {
+      background-color: brown;
+      color: white;
     }
 
-    .sidebar .nav-item:last-of-type {
-      padding-bottom: 1rem;
+    .sidebar .nav-item a:hover {
+      background-color: brown;
+      color: white;
     }
-
-    .sidebar .nav-item a {
-      color: #6495ed;
-      border-radius: 4px;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      line-height: 3rem;
-    }
-
-      .sidebar .nav-item a.active {
-        background-color: rgba(255,255,255,0.25);
-        color: white;
-      }
-
-      .sidebar .nav-item a:hover {
-        background-color: rgba(255,255,255,0.1);
-        color: white;
-      }
 
 .content {
   padding-top: 1.1rem;
 }
 
 .navbar-toggler {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: darkslategrey;
 }
 
 .valid.modified:not([type=checkbox]) {
-  outline: 1px solid #26b050;
+  outline: 1px solid darkmagenta;
 }
 
 .invalid {
@@ -121,7 +113,7 @@ app {
 #blazor-error-ui {
   background: lightyellow;
   bottom: 0;
-  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -1px 2px darkorange;
   display: none;
   left: 0;
   padding: 0.6rem 1.25rem 0.7rem 1.25rem;
@@ -136,6 +128,63 @@ app {
     right: 0.75rem;
     top: 0.5rem;
   }
+
+.card-columns .card {
+  background: lightpink;
+}
+
+  .card-columns .card:hover .card-img {
+    opacity: 1;
+    -webkit-transform-style: preserve-3d;
+  }
+
+.card-columns .card-body {
+  height: 50px;
+  font-family: 'Nunito', sans-serif;
+  background: lightblue;
+}
+
+.card-columns .card-img {
+  height: 250px;
+  vertical-align: bottom;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  opacity: .8;
+}
+
+.modal .card-img {
+  height: 250px;
+  vertical-align: bottom;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.card-columns .card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 10px 20px rgba(37,33,82,.12), 0 4px 8px rgba(37,33,82,.06);
+  background: coral;
+}
+
+.card-footer {
+  background: lightcyan;
+}
+
+a.navbar-brand {
+  white-space: normal;
+  font-family: 'Yellowtail', cursive;
+  font-size: xx-large;
+  text-align: center;
+  word-break: break-all;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
 
 @media (max-width: 767.98px) {
   .main .top-row:not(.auth) {
@@ -178,7 +227,123 @@ app {
   }
 
   .sidebar .collapse {
-    /* Never collapse the sidebar for wide screens */
     display: block;
+  }
+}
+
+.addbutton.button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  margin: 3px;
+  border-radius: 7px;
+  box-shadow: 0 5px #999;
+}
+
+.addbutton:hover {
+  background-color: #3e8e41
+}
+
+.addbutton:active {
+  background-color: #3e8e41;
+  box-shadow: 0 3px #666;
+  -ms-transform: translateY(4px);
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+}
+
+.creditCardForm {
+  max-width: 700px;
+  margin: 100px auto;
+  overflow: hidden;
+  padding: 25px;
+  color: #4c4e56;
+}
+
+.creditCardForm label {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.creditCardForm .heading h1 {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  color: #4c4e56;
+}
+
+.creditCardForm .payment {
+  float: left;
+  font-size: 18px;
+  padding: 10px 25px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.creditCardForm .payment .form-group {
+  float: left;
+  margin-bottom: 15px;
+}
+
+.creditCardForm .payment .form-control {
+  line-height: 40px;
+  height: auto;
+  padding: 0 16px;
+}
+
+.creditCardForm .owner {
+  width: 63%;
+  margin-right: 10px;
+}
+
+.creditCardForm .CVV {
+  width: 35%;
+}
+
+.creditCardForm #card-number-field {
+  width: 100%;
+}
+
+.creditCardForm #expiration-date {
+  width: 49%;
+}
+
+.creditCardForm #credit_cards {
+  width: 50%;
+  margin-top: 25px;
+  text-align: right;
+}
+
+.creditCardForm #pay-now {
+  width: 100%;
+  margin-top: 25px;
+}
+
+.creditCardForm .payment .btn {
+  width: 100%;
+  margin-top: 3px;
+  font-size: 24px;
+  background-color: #2ec4a5;
+  color: white;
+}
+
+.creditCardForm .payment select {
+  padding: 10px;
+  margin-right: 15px;
+}
+
+.transparent {
+  opacity: 0.2;
+}
+
+@media(max-width: 650px) {
+  .creditCardForm .owner,
+  .creditCardForm .CVV,
+  .creditCardForm #expiration-date,
+  .creditCardForm #credit_cards {
+    width: 100%;
+  }
+
+  .creditCardForm #credit_cards {
+    text-align: left;
   }
 }

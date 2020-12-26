@@ -32,15 +32,16 @@ namespace ModernArchitectureShop.Store.Infrastructure.Persistence
 
             store.Addresses.Add(address);
 
-            for (var i = 10; i < 100; i++)
+            for (var i = 10; i < 60; i++)
             {
                 var product = new Product
                 {
                     ProductId = new Guid($"12345678-1234-1234-1234-1234567891{i}"),
                     Code = $"11{i}",
-                    Name = $"Products-{i}",
+                    Name = $"Product{i}",
+                    Description = "This is a test product!",
                     Price = 3.14 * i,
-                    ImageUrl = "/images/MyProduct.png",
+                    ImageUrl = $"Product{i - 9}.png", // image files from 1..50
                     Quantity = 10,
                     Store = store
                 };
